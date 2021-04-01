@@ -6,10 +6,11 @@ ENV GOPATH /go
 ENV CGO_ENABLED 0
 ENV GO111MODULE on
 
+COPY . minio
 RUN  \
      apk add --no-cache git && \
-     git clone https://github.com/minio/minio && cd minio && \
-     git checkout master && go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)"
+     cd minio && \
+     go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)"
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3
 
