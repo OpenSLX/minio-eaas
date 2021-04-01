@@ -22,6 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"os"
 	"path"
@@ -62,6 +63,7 @@ type cacheControl struct {
 }
 
 func (c *cacheControl) isStale(modTime time.Time) bool {
+	log.Printf("cacheControl: %+v, modTime: %+v\n", c, modTime)
 	if c == nil {
 		return false
 	}

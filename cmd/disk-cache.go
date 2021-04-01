@@ -234,7 +234,7 @@ func (c *cacheObjects) GetObjectNInfo(ctx context.Context, bucket, object string
 			}
 		}
 		cc = cacheControlOpts(cacheReader.ObjInfo)
-		if cc != nil && (!cc.isStale(cacheReader.ObjInfo.ModTime) ||
+		if (!cc.isStale(cacheReader.ObjInfo.ModTime) ||
 			cc.onlyIfCached) {
 			// This is a cache hit, mark it so
 			bytesServed := cacheReader.ObjInfo.Size
@@ -392,7 +392,7 @@ func (c *cacheObjects) GetObjectInfo(ctx context.Context, bucket, object string,
 	cachedObjInfo, _, cerr := dcache.Stat(ctx, bucket, object)
 	if cerr == nil {
 		cc = cacheControlOpts(cachedObjInfo)
-		if cc == nil || (cc != nil && !cc.isStale(cachedObjInfo.ModTime)) {
+		if (!cc.isStale(cachedObjInfo.ModTime)) {
 			// This is a cache hit, mark it so
 			c.cacheStats.incHit()
 			return cachedObjInfo, nil
@@ -449,7 +449,7 @@ func (c *cacheObjects) CopyObject(ctx context.Context, srcBucket, srcObject, dst
 	// if currently cached, evict old entry and revert to backend.
 	if cachedObjInfo, _, cerr := dcache.Stat(ctx, srcBucket, srcObject); cerr == nil {
 		cc := cacheControlOpts(cachedObjInfo)
-		if cc == nil || !cc.isStale(cachedObjInfo.ModTime) {
+		if !cc.isStale(cachedObjInfo.ModTime) {
 			dcache.Delete(ctx, srcBucket, srcObject)
 		}
 	}
